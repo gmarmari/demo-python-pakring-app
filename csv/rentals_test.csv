@@ -1,0 +1,3 @@
+licence_plate,name,place_id,rent_start,rent_end
+ABC 1234,Mickey,1,2024-12-01 00:00:00,2025-12-01 00:00:00
+ABC 4321,Mickey,2,2024-01-01 00:00:00,2024-02-01 00:00:00

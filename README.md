@@ -3,23 +3,17 @@ A simple parking app written with python which manages a parking of short and lo
 
 ## Start
 
-> python3 main.py 
+> python3 app.py 
 
 Prerequisites: python and tkinter library
 
-## Architecture 
- Model View Controller
-
- ### Model
- The data. See model.py,
-
  ### View
- UI the library tkinter is used. See view.py
+ UI the library tkinter is used. See app.py
 
  ### Controller
  The business logic for the UI. See controller.py
 
- ## Persistence
- This app saves to and reads data from a csv file. See service.py
+  ### Model
+ The data this app uses. All data are saved in csv files. See activities.py, parking_spaces.py, rentals.py, short_term_rental_payments.py
 
 
