@@ -40,6 +40,10 @@ class ParkingSpaceService(BaseCsvService):
             pass
         return self._parking_spaces
     
+    def get_long_term_parking_spaces(self) -> list:
+        return list(filter(lambda p: p.long_term == True, self.get_parking_spaces()))
+        
+    
     def get_next_free_short_term_space(self) -> ParkingSpace:
       try:
         return next(s for s in self.get_parking_spaces() if s.long_term == False and s.is_free == True)

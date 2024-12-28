@@ -13,10 +13,15 @@ class Rental:
     self.rent_end = rent_end
 
   def is_active(self) -> bool:
-    if self.rent_end is None :
-      return True
-    current_date = datetime.now()
-    return self.rent_end > current_date  
+    return self.is_active_on_date(datetime.now())
+  
+  def is_active_on_date(self, date: datetime) -> bool :
+      """
+      return true if the gievn date is between the renta_start date and rent_end date
+      """
+      return date >= self.rent_start and date <= self.rent_end
+      
+      
   
 
 class RentalService(BaseCsvService):
@@ -50,6 +55,15 @@ class RentalService(BaseCsvService):
             return next(r for r in self.get_rentals() if r.licence_plate == licence_plate and r.is_active() == True)
         except Exception:
             return None  
+        
+    def get_active_rental_for_place_id(self, place_id : str) -> Rental: 
+        try:
+            return next(r for r in self.get_rentals() if r.place_id == place_id and r.is_active() == True)
+        except Exception:
+            return None  
+        
+    def get_active_rentals_on_date(self, date: datetime) -> list: 
+        return list(filter(lambda r: r.is_active_on_date(date) == True, self.get_rentals()))
 
 
     def save_rental(self, r: Rental) -> bool:

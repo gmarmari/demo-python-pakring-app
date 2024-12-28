@@ -24,18 +24,22 @@ class TestRentals(unittest.TestCase):
         self.assertEqual(rental.rent_start, rent_start)
         self.assertEqual(rental.rent_end, rent_end)
 
-    def test_rental_is_active(self):
+    def test_rental_is_active_on_date(self):
         # Given
         licence_plate = "ABC 123"
         name = "Mickey"
         place_id = "1"
-        rent_start = datetime(2024, 12, 1, 0, 0, 0)
-        rent_end_active = datetime(2050, 12, 1, 0, 0, 0)
-        rent_end_inactive = datetime(2024, 12, 5, 0, 0, 0)
+        rent_start = datetime(2024, 1, 1, 0, 0, 0)
+        rent_end = datetime(2025, 1, 1, 0, 0, 0)
+        rental = Rental(place_id, licence_plate, name, rent_start, rent_end)
 
         # When Then
-        self.assertTrue(Rental(place_id, licence_plate, name, rent_start, rent_end_active).is_active())
-        self.assertFalse(Rental(place_id, licence_plate, name, rent_start, rent_end_inactive).is_active())
+        self.assertFalse(rental.is_active_on_date(datetime(2023, 12, 31, 23, 59, 59)))
+        self.assertTrue(rental.is_active_on_date(datetime(2024, 1, 1, 0, 0, 0)))
+        self.assertTrue(rental.is_active_on_date(datetime(2024, 1, 1, 0, 0, 1)))
+        self.assertTrue(rental.is_active_on_date(datetime(2024, 12, 31, 23, 59, 59)))
+        self.assertTrue(rental.is_active_on_date(datetime(2025, 1, 1, 0, 0, 0)))
+        self.assertFalse(rental.is_active_on_date(datetime(2025, 1, 1, 0, 0, 1)))
 
 
     def test_csv_delete_save_get(self):
@@ -93,6 +97,56 @@ class TestRentals(unittest.TestCase):
 
         self.assertIsNone(resultB)
         self.assertIsNone(resultC)
+
+
+    def test_get_active_rental_for_place_id(self):
+        # Given 
+        csv_service = RentalService()
+        csv_service.csv_file = "csv/rentals_test.csv"
+        rentalA = Rental("1", "ABC 1234", "Mickey", datetime(2024, 12, 1, 0, 0, 0), datetime(2025, 12, 1, 0, 0, 0))
+        rentalB = Rental("2", "ABC 4321", "Mickey", datetime(2024, 1, 1, 0, 0, 0), datetime(2024, 2, 1, 0, 0, 0))
+
+        # When
+        self.assertTrue(csv_service.delete_rentals())
+        self.assertTrue(csv_service.save_rental(rentalA))
+        self.assertTrue(csv_service.save_rental(rentalB))
+
+        resultA = csv_service.get_active_rental_for_place_id("1")
+        resultB = csv_service.get_active_rental_for_place_id("2")
+        resultC = csv_service.get_active_rental_for_place_id("not-found")
+
+        # Then
+        self.assertEqual(resultA.licence_plate, rentalA.licence_plate)
+        self.assertEqual(resultA.name, rentalA.name)
+        self.assertEqual(resultA.place_id, rentalA.place_id)
+        self.assertEqual(resultA.rent_start, rentalA.rent_start)
+        self.assertEqual(resultA.rent_end, rentalA.rent_end)
+
+        self.assertIsNone(resultB)
+        self.assertIsNone(resultC)
+
+    def test_get_active_rentals_on_date(self):
+        # Given 
+        csv_service = RentalService()
+        csv_service.csv_file = "csv/rentals_test.csv"
+        rentalA = Rental("1", "ABC 1234", "Mickey", datetime(2024, 1, 1, 0, 0, 0), datetime(2024, 6, 1, 0, 0, 0))
+        rentalB = Rental("2", "ABC 4321", "Mickey", datetime(2024, 7, 1, 0, 0, 0), datetime(2025, 1, 1, 0, 0, 0))
+
+        # When
+        self.assertTrue(csv_service.delete_rentals())
+        self.assertTrue(csv_service.save_rental(rentalA))
+        self.assertTrue(csv_service.save_rental(rentalB))
+        resultA = csv_service.get_active_rentals_on_date(datetime(2024, 3, 1, 0, 0, 0))
+        resultB = csv_service.get_active_rentals_on_date(datetime(2024, 9, 1, 0, 0, 0))
+        resultC = csv_service.get_active_rentals_on_date(datetime(2025, 3, 1, 0, 0, 0))
+
+        # Then
+        self.assertTrue(len(resultA) == 1)
+        self.assertEqual(resultA[0].licence_plate, rentalA.licence_plate)
+        self.assertTrue(len(resultB) == 1)
+        self.assertEqual(resultB[0].licence_plate, rentalB.licence_plate)
+        self.assertTrue(len(resultC) == 0)
+
 
 
 if __name__ == '__main__':

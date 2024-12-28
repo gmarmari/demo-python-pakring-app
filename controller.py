@@ -2,9 +2,10 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
 import math
+import re
 
 from activities import Activity, ActivityService
-from rentals import RentalService
+from rentals import Rental, RentalService
 from parking_spaces import ParkingSpaceService
 from short_term_rental_payments import ShortTermRentalPayment, ShortTermRentalPaymentService
 
@@ -32,6 +33,8 @@ class ParkingController:
       
       existing_rental = self._rental_service.get_active_rental_for_licence_plate(license_plate)
       if  existing_rental != None : 
+        self._activity_service.save_activity(Activity(existing_rental.place_id, license_plate))
+        self._parking_space_service.update_parking_space(existing_rental.place_id, False)
         self.view.show_parking_place(license_plate, existing_rental.place_id)
         return
       
@@ -72,6 +75,66 @@ class ParkingController:
 
         self.view.show_goodbye_with_payment_message(license_plate, amount)
 
+    
+    def get_free_long_term_parking_spaces_for_dates(self, 
+                                                    date_start_str :str = datetime.now().strftime("%d-%m-%Y"), 
+                                                    date_end_str: str = datetime.now().strftime("%d-%m-%Y")) -> list:
+        if self.is_invalid_date(date_start_str) or self.is_invalid_date(date_end_str):
+            return []
+        
+        date_start = datetime.strptime(date_start_str, "%d-%m-%Y")
+        date_end = datetime.strptime(date_end_str, "%d-%m-%Y")
+        active_rentals_start = self._rental_service.get_active_rentals_on_date(date_start)
+        active_rentals_end = self._rental_service.get_active_rentals_on_date(date_end)
+
+        free_spaces = self._parking_space_service.get_long_term_parking_spaces()
+
+        free_place_ids = list(map(lambda s: s.place_id, free_spaces))
+        for r in active_rentals_start:
+            if r.place_id in free_place_ids :
+                free_place_ids.remove(r.place_id)
+        for r in active_rentals_end:
+            if r.place_id in free_place_ids :
+                free_place_ids.remove(r.place_id)
+        return free_place_ids
+    
+    def handle_create_rental(self, licence_plate: str, name: str, place_id: str, date_start_str: str, date_end_str: str) :
+        if licence_plate is None or len(licence_plate) == 0 :
+            self.view.error_no_licence_plate()
+            return
+        if name is None or len(name) == 0 :
+            self.view.error_no_name()
+            return
+        if place_id is None or len(place_id) == 0 :
+            self.view.error_no_place()
+            return
+        if self.is_invalid_date(date_start_str):
+            self.view.error_invalid_start_date()
+            return
+        if self.is_invalid_date(date_end_str):
+            self.view.error_invalid_end_date()
+            return
+        
+        date_start = datetime.strptime(date_start_str, "%d-%m-%Y")
+        date_end = datetime.strptime(date_end_str, "%d-%m-%Y")
+
+        if date_start <= datetime.now() or date_end <= date_start:
+            self.view.error_invalid_start_end_date()
+            return
+        
+        if self._rental_service.get_active_rental_for_place_id(place_id) is not None:
+            self.view.error_place_is_not_available_for_rental(place_id)
+            return
+
+        self._rental_service.save_rental(Rental(place_id, licence_plate, name, date_start, date_end))
+        self.view.show_rental_saved()
+
+
+    def is_invalid_date(self, text):
+        pattern = r"^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(\d{4})$"
+        return re.fullmatch(pattern, text) is None  
+        
+       
 
 
 
@@ -90,9 +153,33 @@ class ParkingControllerView:
     @abstractmethod
     def show_goodbye_with_payment_message(self, license_plate, amount: str):
         pass
+
+    @abstractmethod
+    def show_rental_saved(self):
+        pass
         
     @abstractmethod
     def error_no_licence_plate(self):
+        pass
+
+    @abstractmethod
+    def error_no_name(self):
+        pass
+
+    @abstractmethod
+    def error_no_place(self):
+        pass
+
+    @abstractmethod
+    def error_invalid_start_date(self):
+        pass
+
+    @abstractmethod
+    def error_invalid_end_date(self):
+        pass
+
+    @abstractmethod
+    def error_invalid_start_end_date(self):
         pass
     
     @abstractmethod
@@ -101,6 +188,10 @@ class ParkingControllerView:
 
     @abstractmethod
     def error_no_incoming_activity_found(self, license_plate):
+        pass
+
+    @abstractmethod
+    def error_place_is_not_available_for_rental(self, place_id):
         pass
     
         
