@@ -8,11 +8,18 @@ from csv_service import BaseCsvService
 
 
 class ShortTermRentalPayment:
-  def __init__(self, place_id: str, licence_plate : str, amount : int, date : datetime = datetime.now()):
-    self.licence_plate = licence_plate
-    self.place_id = place_id
-    self.amount = amount
-    self.date = date
+    def __init__(self, place_id: str, licence_plate : str, amount : int, date : datetime = datetime.now()):
+        self.licence_plate = licence_plate
+        self.place_id = place_id
+        self.amount = amount
+        self.date = date
+
+    def is_today(self):
+        """
+        return True if the date of the payment belongs to the current day
+        """
+        return self.date.date() == datetime.today().date()
+      
       
 class ShortTermRentalPaymentService(BaseCsvService):
     def __init__(self, csv_file : str = 'csv/short_term_rental_payment.csv'):
@@ -38,6 +45,9 @@ class ShortTermRentalPaymentService(BaseCsvService):
             logging.exception("Error reading payment from csv file")
             pass
         return self._payments
+            
+    def get_payments_for_today(self) -> list: 
+        return list(filter(lambda p: p.is_today() == True, self.get_payments()))
     
     def save_payment(self, p: ShortTermRentalPayment) -> bool:
         try:

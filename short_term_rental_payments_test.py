@@ -21,7 +21,21 @@ class TestShortTermRentalPayments(unittest.TestCase):
         self.assertEqual(payment.amount, amount)
         self.assertEqual(payment.date, date)
 
-def test_csv_delete_save_get(self):
+    def test_short_term_rental_payment_is_today(self):
+        # Given
+        place_id = "1"
+        licence_plate = "ABC 123"
+        amount = 6
+        paymentA = ShortTermRentalPayment(place_id, licence_plate, amount, datetime(2024, 12, 1, 8, 0, 0))
+        paymentB = ShortTermRentalPayment(place_id, licence_plate, amount, datetime.now())
+
+        # When
+
+        # Then
+        self.assertFalse(paymentA.is_today())
+        self.assertTrue(paymentB.is_today())
+
+    def test_csv_delete_save_get(self):
         # Given 
         csv_service = ShortTermRentalPaymentService()
         csv_service.csv_file = "csv/short_term_rental_payment_test.csv"
@@ -48,6 +62,30 @@ def test_csv_delete_save_get(self):
         self.assertEqual(resultB.licence_plate, paymentB.licence_plate)
         self.assertEqual(resultB.amount, paymentB.amount)
         self.assertEqual(resultB.date, paymentB.date)
+
+    def test_get_payments_for_today(self):
+        # Given 
+        csv_service = ShortTermRentalPaymentService()
+        csv_service.csv_file = "csv/short_term_rental_payment_test.csv"
+        paymentA = ShortTermRentalPayment("1", "ABC 1234", 4, datetime.now())
+        paymentB = ShortTermRentalPayment("6", "DEF 1234", 6, datetime.now())
+        paymentC = ShortTermRentalPayment("7", "GHJ 1234", 7, datetime(2024, 12, 1, 0, 0, 0))
+
+        # When
+        self.assertTrue(csv_service.delete_payments())
+        self.assertTrue(csv_service.save_payment(paymentA))
+        self.assertTrue(csv_service.save_payment(paymentB))
+        self.assertTrue(csv_service.save_payment(paymentC))
+        list = csv_service.get_payments_for_today()
+
+        # Then
+        self.assertEqual(len(list), 2)
+
+        resultA : ShortTermRentalPayment = list[0]
+        self.assertEqual(resultA.place_id, paymentA.place_id)
+
+        resultB : ShortTermRentalPayment = list[1]
+        self.assertEqual(resultB.place_id, paymentB.place_id)
 
 
 
