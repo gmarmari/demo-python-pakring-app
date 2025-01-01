@@ -81,6 +81,29 @@ class TestActivities(unittest.TestCase):
 
         self.assertIsNone(resultB)
 
+    def test_get_active_activity_for_place_id(self): 
+         # Given 
+        csv_service = ActivityService()
+        csv_service.csv_file = "csv/activity_test.csv"
+        activityA = Activity("1", "ABC 1234", datetime(2024, 12, 1, 0, 0, 0))
+        activityB = Activity("6", "DEF 1234", datetime(2024, 12, 24, 8, 32, 47), datetime(2024, 12, 24, 9, 32, 47))
+        self.assertTrue(csv_service.delete_activities())
+        self.assertTrue(csv_service.save_activity(activityA))
+        self.assertTrue(csv_service.save_activity(activityB))
+
+        # When
+        resultA = csv_service.get_active_activity_for_place_id("1")
+        resultB = csv_service.get_active_activity_for_place_id("6")
+
+        # Then
+        self.assertEqual(resultA.place_id, activityA.place_id)
+        self.assertEqual(resultA.licence_plate, activityA.licence_plate)
+        self.assertEqual(resultA.datetime_in, activityA.datetime_in)
+        self.assertEqual(resultA.datetime_out, activityA.datetime_out)
+
+        self.assertIsNone(resultB)
+    
+
     def test_update_activity(self): 
          # Given 
         csv_service = ActivityService()

@@ -6,7 +6,7 @@ import re
 
 from activities import Activity, ActivityService
 from rentals import Rental, RentalService
-from parking_spaces import ParkingSpaceService
+from parking_spaces import ParkingSpaceOverview, ParkingSpaceService
 from short_term_rental_payments import ShortTermRentalPayment, ShortTermRentalPaymentService
 
 class ParkingController: 
@@ -138,6 +138,28 @@ class ParkingController:
         for p in payments :
             amount += p.amount
         return amount
+    
+    def get_parking_spaces_overview(self) -> list:
+        list = []
+        parking_spaces =  self._parking_space_service.get_parking_spaces()
+        for i in range(len(parking_spaces)):
+            space = parking_spaces[i]
+            row = (i // 2)
+            column = 0
+            if i // 2 != i /2 :
+                column = 1
+
+            background="lightblue"
+            if space.long_term == True :
+                background= "yellow"
+
+            text = space.place_id
+            if space.is_free == False :
+                activity = self._activity_service.get_active_activity_for_place_id(space.place_id)
+                if activity is not None :
+                    text += " - " + activity.licence_plate
+            list.append(ParkingSpaceOverview(text, background, row, column))
+        return list
 
 
     def is_invalid_date(self, text):

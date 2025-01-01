@@ -45,6 +45,12 @@ class ActivityService(BaseCsvService):
             return next(a for a in self.get_activities() if a.licence_plate == licence_plate and a.is_active() == True)
         except Exception:
             return None  
+        
+    def get_active_activity_for_place_id(self, place_id: str) -> Activity:
+        try:
+            return next(a for a in self.get_activities() if a.place_id == place_id and a.is_active() == True)
+        except Exception:
+            return None  
     
     def save_activity(self, a: Activity) -> bool:
         try:

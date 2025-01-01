@@ -44,6 +44,10 @@ class ParkingApp(ParkingControllerView):
         days_takings_button = tk.Button(self.menu_frame, text=TEXT_DAYS_TAKINGS,command=self._open_detail_days_takings)  
         days_takings_button.grid(row=3,column=0,padx=5,pady=5)
 
+        parking_spaces_button = tk.Button(self.menu_frame, text=TEXT_PARKING_SPACES,command=self._open_detail_parking_spaces)  
+        parking_spaces_button.grid(row=4,column=0,padx=5,pady=5)
+
+
     
     def _open_detail_incoming_car(self):    
         self._clear_detail_frame()
@@ -119,7 +123,6 @@ class ParkingApp(ParkingControllerView):
             self.parking_place_compobox.set("")
         self.parking_place_compobox.grid(row=5, column=1, padx=10,pady=5) 
 
-
         ok_button = tk.Button(self.detail_frame, text=TEXT_OK,command=self._handle_create_long_term_rental)  
         ok_button.grid(row=6,column=3,padx=5,pady=5)
 
@@ -145,7 +148,15 @@ class ParkingApp(ParkingControllerView):
         total_amount = self.controller.get_total_amount_of_payments_for_today()
         sum_label = tk.Label(self.detail_frame,text=LABEL_TOTAL_AMOUNT + " " + str(total_amount))
         sum_label.grid(row=2,column=0,padx=10,pady=5)  
-    
+
+
+    def _open_detail_parking_spaces(self) :
+        self._clear_detail_frame()
+
+        parking_spaces = self.controller.get_parking_spaces_overview()
+        for p in parking_spaces :
+            label = tk.Label(self.detail_frame,text=p.text, width=20, bg=p.background)
+            label.grid(row=p.row,column=p.column, padx=10,pady=10)  
 
 
     def _on_date_entry_focus_out_event(self, event):

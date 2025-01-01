@@ -9,6 +9,13 @@ class ParkingSpace:
     self.long_term = long_term
     self.is_free = is_free
 
+class ParkingSpaceOverview:
+  def __init__(self, text : str,  background : str = "lightblue", row : int = 0, column: int = 0):
+    self.text = text
+    self.background = background
+    self.row = row
+    self.column = column
+
 
 class ParkingSpaceService(BaseCsvService):
     def __init__(self, csv_file : str = 'csv/parking_spaces.csv'):
