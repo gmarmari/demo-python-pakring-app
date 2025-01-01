@@ -41,6 +41,9 @@ class ParkingApp(ParkingControllerView):
         long_term_rental_button = tk.Button(self.menu_frame, text=TEXT_LONG_TERM_RENTAL,command=self._open_detail_create_long_term_rental)  
         long_term_rental_button.grid(row=2,column=0,padx=5,pady=5)
 
+        days_takings_button = tk.Button(self.menu_frame, text=TEXT_DAYS_TAKINGS,command=self._open_detail_days_takings)  
+        days_takings_button.grid(row=3,column=0,padx=5,pady=5)
+
     
     def _open_detail_incoming_car(self):    
         self._clear_detail_frame()
@@ -119,6 +122,30 @@ class ParkingApp(ParkingControllerView):
 
         ok_button = tk.Button(self.detail_frame, text=TEXT_OK,command=self._handle_create_long_term_rental)  
         ok_button.grid(row=6,column=3,padx=5,pady=5)
+
+
+    def _open_detail_days_takings(self) : 
+        self._clear_detail_frame()
+
+        title_label = tk.Label(self.detail_frame,text=TEXT_DAYS_TAKINGS)
+        title_label.grid(row=0,column=0,columnspan=3, padx=10,pady=5)  
+
+        columns = (TEXT_LICENCE_PLATE, TEXT_PLACE, TEXT_DATE, TEXT_AMOUNT_IN_EURO)
+        tree = ttk.Treeview(self.detail_frame, columns=columns, show='headings')
+
+        for col in columns:
+            tree.heading(col, text=col)
+            tree.column(col, width=150)
+
+        payments = self.controller.get_payments_for_today()
+        for p in payments:
+            tree.insert('', tk.END, values=(p.licence_plate, p.place_id, p.date.strftime('%Y-%m-%d %H:%M:%S'), p.amount))
+        tree.grid(row=1, column=0,padx=10,pady=5)  
+
+        total_amount = self.controller.get_total_amount_of_payments_for_today()
+        sum_label = tk.Label(self.detail_frame,text=LABEL_TOTAL_AMOUNT + " " + str(total_amount))
+        sum_label.grid(row=2,column=0,padx=10,pady=5)  
+    
 
 
     def _on_date_entry_focus_out_event(self, event):

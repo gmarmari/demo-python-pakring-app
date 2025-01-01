@@ -129,6 +129,16 @@ class ParkingController:
         self._rental_service.save_rental(Rental(place_id, licence_plate, name, date_start, date_end))
         self.view.show_rental_saved()
 
+    def get_payments_for_today(self) -> list :
+        return self._payment_service.get_payments_for_today()
+    
+    def get_total_amount_of_payments_for_today(self) -> int :
+        payments = self._payment_service.get_payments_for_today()
+        amount = 0
+        for p in payments :
+            amount += p.amount
+        return amount
+
 
     def is_invalid_date(self, text):
         pattern = r"^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(\d{4})$"
