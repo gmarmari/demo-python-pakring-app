@@ -49,6 +49,11 @@ class ParkingApp(ParkingControllerView):
         parking_spaces_button = tk.Button(self.menu_frame, text=TEXT_PARKING_SPACES,command=self._open_detail_parking_spaces)  
         parking_spaces_button.grid(row=4,column=0,padx=5,pady=5)
 
+        parked_cars_button = tk.Button(self.menu_frame, text=TEXT_PARKED_CARS,command=self._open_detail_parked_cars)  
+        parked_cars_button.grid(row=5,column=0,padx=5,pady=5)
+
+        
+
 
     
     def _open_detail_incoming_car(self):    
@@ -158,6 +163,28 @@ class ParkingApp(ParkingControllerView):
         for p in parking_spaces :
             label = tk.Label(self.detail_frame,text=p.text, width=20, bg=p.background)
             label.grid(row=p.row,column=p.column, padx=10,pady=10)  
+
+    def _open_detail_parked_cars(self) : 
+        self._clear_detail_frame()
+
+        title_label = tk.Label(self.detail_frame,text=TEXT_PARKED_CARS)
+        title_label.grid(row=0,column=0,columnspan=3, padx=10,pady=5)  
+
+        columns = (TEXT_LICENCE_PLATE, TEXT_PLACE, TEXT_DATE_IN)
+        tree = ttk.Treeview(self.detail_frame, columns=columns, show='headings')
+
+        for col in columns:
+            tree.heading(col, text=col)
+            tree.column(col, width=150)
+
+        activities = self.controller.get_active_activities()
+        for a in activities:
+            tree.insert('', tk.END, values=(a.licence_plate, a.place_id, a.datetime_in_to_string()))
+        tree.grid(row=1, column=0,padx=10,pady=5)  
+
+
+        
+        
 
 
     def _on_date_entry_focus_out_event(self, event):

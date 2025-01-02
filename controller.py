@@ -157,6 +157,9 @@ class ParkingController:
                     text += " - " + activity.licence_plate
             list.append(ParkingSpaceOverview(text, background, row, column))
         return list
+    
+    def get_active_activities(self) : 
+        return self._activity_service.get_active_activities()
 
 
     def is_invalid_date(self, text):

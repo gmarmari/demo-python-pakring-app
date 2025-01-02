@@ -14,6 +14,9 @@ class Activity:
 
   def is_active(self) -> bool:
     return self.datetime_out is None
+  
+  def datetime_in_to_string(self) -> str :
+    return self.datetime_in.strftime('%Y-%m-%d %H:%M:%S')
 
 class ActivityService(BaseCsvService):
     def __init__(self, csv_file : str = 'csv/activity.csv'):
@@ -39,6 +42,9 @@ class ActivityService(BaseCsvService):
             logging.exception("Error reading activities from csv file")
             pass
         return self._activities
+    
+    def get_active_activities(self) -> list:
+        return list(filter(lambda a: a.is_active() == True, self.get_activities()))
     
     def get_active_activity_for_licence_plate(self, licence_plate: str) -> Activity:
         try:
