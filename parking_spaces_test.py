@@ -80,6 +80,27 @@ class TestParkingSpaces(unittest.TestCase):
         resultB : ParkingSpace = list[1]
         self.assertEqual(resultB.place_id, spaceB.place_id)
 
+    def test_get_free_parking_spaces(self) : 
+        # Given 
+        csv_service = ParkingSpaceService()
+        csv_service.csv_file = "csv/parking_spaces_test.csv"
+        spaceA = ParkingSpace("1", True, True)
+        spaceB = ParkingSpace("2", True, True)
+        spaceC = ParkingSpace("3", False, False)
+
+        # When
+        self.assertTrue(csv_service.save_parking_spaces([spaceA, spaceB, spaceC]))
+        list = csv_service.get_free_parking_spaces()
+
+        # Then
+        self.assertEqual(len(list), 2)
+
+        resultA : ParkingSpace = list[0]
+        self.assertEqual(resultA.place_id, spaceA.place_id)
+
+        resultB : ParkingSpace = list[1]
+        self.assertEqual(resultB.place_id, spaceB.place_id)
+
 
 if __name__ == '__main__':
     unittest.main()

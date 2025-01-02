@@ -160,7 +160,9 @@ class ParkingController:
     
     def get_active_activities(self) : 
         return self._activity_service.get_active_activities()
-
+    
+    def get_free_parking_spaces(self) : 
+        return self._parking_space_service.get_free_parking_spaces()
 
     def is_invalid_date(self, text):
         pattern = r"^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(\d{4})$"
