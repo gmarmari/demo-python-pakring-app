@@ -7,6 +7,8 @@ from datetime import datetime
 from controller import ParkingController
 from controller import ParkingControllerView
 
+from short_term_rental_payments import DaysTakings
+
 from messages import *
 
 class ParkingApp(ParkingControllerView):
@@ -140,13 +142,12 @@ class ParkingApp(ParkingControllerView):
             tree.heading(col, text=col)
             tree.column(col, width=150)
 
-        payments = self.controller.get_payments_for_today()
-        for p in payments:
-            tree.insert('', tk.END, values=(p.licence_plate, p.place_id, p.date.strftime('%Y-%m-%d %H:%M:%S'), p.amount))
+        takings = self.controller.get_todays_takings()
+        for p in takings.payments:
+            tree.insert('', tk.END, values=(p.licence_plate, p.place_id, p.date_to_string(), p.amount))
         tree.grid(row=1, column=0,padx=10,pady=5)  
 
-        total_amount = self.controller.get_total_amount_of_payments_for_today()
-        sum_label = tk.Label(self.detail_frame,text=LABEL_TOTAL_AMOUNT + " " + str(total_amount))
+        sum_label = tk.Label(self.detail_frame,text=LABEL_TOTAL_AMOUNT + " " + str(takings.total_amount))
         sum_label.grid(row=2,column=0,padx=10,pady=5)  
 
 

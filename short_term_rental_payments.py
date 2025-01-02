@@ -19,6 +19,14 @@ class ShortTermRentalPayment:
         return True if the date of the payment belongs to the current day
         """
         return self.date.date() == datetime.today().date()
+    
+    def date_to_string(self) -> str :
+        return self.date.strftime('%Y-%m-%d %H:%M:%S')
+    
+class DaysTakings:
+    def __init__(self, payments: list = [], total_amount : int = 0):
+        self.payments = payments
+        self.total_amount = total_amount
       
       
 class ShortTermRentalPaymentService(BaseCsvService):

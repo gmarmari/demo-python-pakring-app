@@ -7,7 +7,7 @@ import re
 from activities import Activity, ActivityService
 from rentals import Rental, RentalService
 from parking_spaces import ParkingSpaceOverview, ParkingSpaceService
-from short_term_rental_payments import ShortTermRentalPayment, ShortTermRentalPaymentService
+from short_term_rental_payments import ShortTermRentalPayment, DaysTakings, ShortTermRentalPaymentService
 
 class ParkingController: 
     def __init__(self, rental_service: RentalService = RentalService(), 
@@ -129,16 +129,13 @@ class ParkingController:
         self._rental_service.save_rental(Rental(place_id, licence_plate, name, date_start, date_end))
         self.view.show_rental_saved()
 
-    def get_payments_for_today(self) -> list :
-        return self._payment_service.get_payments_for_today()
-    
-    def get_total_amount_of_payments_for_today(self) -> int :
+    def get_todays_takings(self) -> DaysTakings :
         payments = self._payment_service.get_payments_for_today()
-        amount = 0
+        total_amount = 0
         for p in payments :
-            amount += p.amount
-        return amount
-    
+            total_amount += p.amount
+        return DaysTakings(payments, total_amount)
+
     def get_parking_spaces_overview(self) -> list:
         list = []
         parking_spaces =  self._parking_space_service.get_parking_spaces()
