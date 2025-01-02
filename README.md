@@ -1,6 +1,8 @@
 # demo-python-pakring-app
 A simple parking app written with python which manages a parking of short and long rental term places.
 
+![alt text](image.png)
+
 ## Start
 
 > python3 app.py 
