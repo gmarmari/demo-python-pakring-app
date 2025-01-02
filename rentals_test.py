@@ -41,6 +41,23 @@ class TestRentals(unittest.TestCase):
         self.assertTrue(rental.is_active_on_date(datetime(2025, 1, 1, 0, 0, 0)))
         self.assertFalse(rental.is_active_on_date(datetime(2025, 1, 1, 0, 0, 1)))
 
+    def test_rental_get_payment_amount_on_date(self): 
+        # Given
+        licence_plate = "ABC 123"
+        name = "Mickey"
+        place_id = "1"
+        rent_start = datetime(2024, 1, 1, 0, 0, 0)
+        rent_end = datetime(2025, 1, 1, 0, 0, 0)
+        rental = Rental(place_id, licence_plate, name, rent_start, rent_end)
+
+        # When Then
+        self.assertEqual(rental.get_payment_amount_on_date(datetime(2023, 1, 1, 0, 0, 0)), 0)
+        self.assertEqual(rental.get_payment_amount_on_date(datetime(2024, 1, 1, 0, 0, 0)), 0)
+        self.assertEqual(rental.get_payment_amount_on_date(datetime(2024, 2, 1, 0, 0, 0)), 50)
+        self.assertEqual(rental.get_payment_amount_on_date(datetime(2024, 7, 1, 0, 0, 0)), 300)
+        self.assertEqual(rental.get_payment_amount_on_date(datetime(2025, 1, 1, 0, 0, 0)), 600)
+        self.assertEqual(rental.get_payment_amount_on_date(datetime(2025, 6, 1, 0, 0, 0)), 600)
+
 
     def test_csv_delete_save_get(self):
         # Given 

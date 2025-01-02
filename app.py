@@ -55,6 +55,9 @@ class ParkingApp(ParkingControllerView):
         free_parking_spaces_button = tk.Button(self.menu_frame, text=TEXT_FREE_PARKING_SPACES,command=self._open_detail_free_parking_spaces)  
         free_parking_spaces_button.grid(row=6,column=0,padx=5,pady=5)
 
+        total_takings_button = tk.Button(self.menu_frame, text=TEXT_TOTAL_TAKINGS,command=self._open_detail_total_takings)  
+        total_takings_button.grid(row=7,column=0,padx=5,pady=5)
+
         
 
 
@@ -206,6 +209,26 @@ class ParkingApp(ParkingControllerView):
                 long_term = TEXT_YES
             tree.insert('', tk.END, values=(p.place_id, long_term))
         tree.grid(row=1, column=0,padx=10,pady=5)  
+
+    def _open_detail_total_takings(self) :
+        self._clear_detail_frame()
+
+        title_label = tk.Label(self.detail_frame,text=TEXT_TOTAL_TAKINGS)
+        title_label.grid(row=0,column=0,columnspan=3, padx=10,pady=5)  
+
+        columns = (TEXT_LICENCE_PLATE, TEXT_AMOUNT_IN_EURO)
+        tree = ttk.Treeview(self.detail_frame, columns=columns, show='headings')
+
+        for col in columns:
+            tree.heading(col, text=col)
+            tree.column(col, width=150)
+
+        total_takings = self.controller.get_total_takings()
+        for t in total_takings:
+            tree.insert('', tk.END, values=(t.licence_plate, t.amount))
+        tree.grid(row=1, column=0,padx=10,pady=5)  
+
+
         
 
 

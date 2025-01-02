@@ -3,6 +3,7 @@ import os
 import csv
 import logging
 from csv_service import BaseCsvService
+from date_utils import DateUtils
 
 class Rental:
   def __init__(self, place_id: str, licence_plate : str, name : str = "", rent_start : datetime = datetime.now(), rent_end : datetime = datetime.now()):
@@ -20,6 +21,20 @@ class Rental:
       return true if the gievn date is between the renta_start date and rent_end date
       """
       return date >= self.rent_start and date <= self.rent_end
+  
+  def get_payment_amount_on_date(self, date: datetime = datetime.now()) -> int:
+        """
+        return the total payment from the rental start date until the given date (or the rental end date)
+        """
+        date_end = self.rent_end
+        if date < date_end:
+            date_end = date
+        months = DateUtils().months_difference(self.rent_start, date_end)
+        if months <= 0 :
+            return 0
+        else :
+            amount = 50*months
+            return amount
       
       
   

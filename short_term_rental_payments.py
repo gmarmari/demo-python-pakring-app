@@ -27,7 +27,11 @@ class DaysTakings:
     def __init__(self, payments: list = [], total_amount : int = 0):
         self.payments = payments
         self.total_amount = total_amount
-      
+
+class TotalTakings:
+    def __init__(self, licence_plate : str, amount : int):
+        self.licence_plate = licence_plate
+        self.amount = amount
       
 class ShortTermRentalPaymentService(BaseCsvService):
     def __init__(self, csv_file : str = 'csv/short_term_rental_payment.csv'):

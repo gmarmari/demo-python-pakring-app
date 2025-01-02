@@ -1,13 +1,14 @@
 
 from abc import ABC, abstractmethod
 from datetime import datetime
+from collections import defaultdict
 import math
 import re
 
 from activities import Activity, ActivityService
 from rentals import Rental, RentalService
 from parking_spaces import ParkingSpaceOverview, ParkingSpaceService
-from short_term_rental_payments import ShortTermRentalPayment, DaysTakings, ShortTermRentalPaymentService
+from short_term_rental_payments import ShortTermRentalPayment, DaysTakings, TotalTakings, ShortTermRentalPaymentService
 
 class ParkingController: 
     def __init__(self, rental_service: RentalService = RentalService(), 
@@ -163,6 +164,22 @@ class ParkingController:
     
     def get_free_parking_spaces(self) : 
         return self._parking_space_service.get_free_parking_spaces()
+    
+    def get_total_takings(self) -> list :
+        map = defaultdict(int)
+        for payment in self._payment_service.get_payments():
+            map[payment.licence_plate] += payment.amount
+
+        current_date = datetime.now()
+        for rental in self._rental_service.get_rentals():
+            amount = rental.get_payment_amount_on_date(current_date)
+            map[payment.licence_plate] += amount
+
+        result_list = [TotalTakings(k, v) for k, v in map.items()]
+        result_list.sort(key=lambda x: x.amount, reverse=True)
+        return result_list
+
+
 
     def is_invalid_date(self, text):
         pattern = r"^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(\d{4})$"
