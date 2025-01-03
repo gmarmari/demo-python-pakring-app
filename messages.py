@@ -11,7 +11,7 @@ ERROR_LONG_TERM_PLACE_AVAILABLE = "No long term place is available at the moment
 ERROR_NO_INCOMING_ACTIVITY_FOUND_FOR = "No incoming activity found for"
 ERROR_INVALID_START_DATE = "Please enter a valid start date in format dd-MM-yyyy"
 ERROR_INVALID_END_DATE = "Please enter a valid end date in format dd-MM-yyyy"
-ERROR_INVALID_START_END_DATE = "Start date must not lie in the past and end date must be greater than start date"
+ERROR_INVALID_START_END_DATE = "The end date must be greater than start date"
 ERROR_PLACE_NOT_AVAILABLE_FOR_RENTAL = "The place is not available for rental, place: "
 ERROR_NO_PLACE_AVAILABLE_FOR_RENTAL_ON_SELECTED_DATES = "No place is not available for rental for the selected dates"
 

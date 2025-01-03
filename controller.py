@@ -119,7 +119,7 @@ class ParkingController:
         date_start = datetime.strptime(date_start_str, "%d-%m-%Y")
         date_end = datetime.strptime(date_end_str, "%d-%m-%Y")
 
-        if date_start <= datetime.now() or date_end <= date_start:
+        if date_end <= date_start:
             self.view.error_invalid_start_end_date()
             return
         
