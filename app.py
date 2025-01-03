@@ -34,28 +34,28 @@ class ParkingApp(ParkingControllerView):
         self._create_menu_options()
 
     def _create_menu_options(self):  
-        incoming_car_button = tk.Button(self.menu_frame, text=TEXT_INCOMING_CAR,command=self._open_detail_incoming_car)  
+        incoming_car_button = tk.Button(self.menu_frame, width=15, text=TEXT_INCOMING_CAR,command=self._open_detail_incoming_car)  
         incoming_car_button.grid(row=0,column=0,padx=5,pady=5)
 
-        outgoung_car_button = tk.Button(self.menu_frame, text=TEXT_OUTGOING_CAR,command=self._open_detail_outgoing_car)  
+        outgoung_car_button = tk.Button(self.menu_frame, width=15, text=TEXT_OUTGOING_CAR,command=self._open_detail_outgoing_car)  
         outgoung_car_button.grid(row=1,column=0,padx=5,pady=5)
 
-        long_term_rental_button = tk.Button(self.menu_frame, text=TEXT_LONG_TERM_RENTAL,command=self._open_detail_create_long_term_rental)  
+        long_term_rental_button = tk.Button(self.menu_frame, width=15, text=TEXT_LONG_TERM_RENTAL,command=self._open_detail_create_long_term_rental)  
         long_term_rental_button.grid(row=2,column=0,padx=5,pady=5)
 
-        days_takings_button = tk.Button(self.menu_frame, text=TEXT_DAYS_TAKINGS,command=self._open_detail_days_takings)  
+        days_takings_button = tk.Button(self.menu_frame, width=15, text=TEXT_DAYS_TAKINGS,command=self._open_detail_days_takings)  
         days_takings_button.grid(row=3,column=0,padx=5,pady=5)
 
-        parking_spaces_button = tk.Button(self.menu_frame, text=TEXT_PARKING_SPACES,command=self._open_detail_parking_spaces)  
+        parking_spaces_button = tk.Button(self.menu_frame, width=15, text=TEXT_PARKING_SPACES,command=self._open_detail_parking_spaces)  
         parking_spaces_button.grid(row=4,column=0,padx=5,pady=5)
 
-        parked_cars_button = tk.Button(self.menu_frame, text=TEXT_PARKED_CARS,command=self._open_detail_parked_cars)  
+        parked_cars_button = tk.Button(self.menu_frame, width=15, text=TEXT_PARKED_CARS,command=self._open_detail_parked_cars)  
         parked_cars_button.grid(row=5,column=0,padx=5,pady=5)
 
-        free_parking_spaces_button = tk.Button(self.menu_frame, text=TEXT_FREE_PARKING_SPACES,command=self._open_detail_free_parking_spaces)  
+        free_parking_spaces_button = tk.Button(self.menu_frame, width=15, text=TEXT_FREE_PARKING_SPACES,command=self._open_detail_free_parking_spaces)  
         free_parking_spaces_button.grid(row=6,column=0,padx=5,pady=5)
 
-        total_takings_button = tk.Button(self.menu_frame, text=TEXT_TOTAL_TAKINGS,command=self._open_detail_total_takings)  
+        total_takings_button = tk.Button(self.menu_frame, width=15, text=TEXT_TOTAL_TAKINGS,command=self._open_detail_total_takings)  
         total_takings_button.grid(row=7,column=0,padx=5,pady=5)
 
         
