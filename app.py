@@ -147,7 +147,7 @@ class ParkingApp(ParkingControllerView):
         title_label.grid(row=0,column=0,columnspan=3, padx=10,pady=5)  
 
         columns = (TEXT_LICENCE_PLATE, TEXT_PLACE, TEXT_DATE, TEXT_AMOUNT_IN_EURO)
-        tree = ttk.Treeview(self.detail_frame, columns=columns, show='headings')
+        tree = ttk.Treeview(self.detail_frame, columns=columns, show='headings', height=25)
 
         for col in columns:
             tree.heading(col, text=col)
@@ -180,7 +180,7 @@ class ParkingApp(ParkingControllerView):
         title_label.grid(row=0,column=0,columnspan=3, padx=10,pady=5)  
 
         columns = (TEXT_LICENCE_PLATE, TEXT_PLACE, TEXT_DATE_IN)
-        tree = ttk.Treeview(self.detail_frame, columns=columns, show='headings')
+        tree = ttk.Treeview(self.detail_frame, columns=columns, show='headings', height=25)
 
         for col in columns:
             tree.heading(col, text=col)
@@ -199,7 +199,7 @@ class ParkingApp(ParkingControllerView):
         title_label.grid(row=0,column=0,columnspan=3, padx=10,pady=5)  
 
         columns = (TEXT_PLACE, TEXT_LONG_TERM)
-        tree = ttk.Treeview(self.detail_frame, columns=columns, show='headings')
+        tree = ttk.Treeview(self.detail_frame, columns=columns, show='headings', height=25)
 
         for col in columns:
             tree.heading(col, text=col)
@@ -220,7 +220,7 @@ class ParkingApp(ParkingControllerView):
         title_label.grid(row=0,column=0,columnspan=3, padx=10,pady=5)  
 
         columns = (TEXT_LICENCE_PLATE, TEXT_AMOUNT_IN_EURO)
-        tree = ttk.Treeview(self.detail_frame, columns=columns, show='headings')
+        tree = ttk.Treeview(self.detail_frame, columns=columns, show='headings', height=25)
 
         for col in columns:
             tree.heading(col, text=col)
