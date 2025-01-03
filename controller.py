@@ -173,7 +173,7 @@ class ParkingController:
         current_date = datetime.now()
         for rental in self._rental_service.get_rentals():
             amount = rental.get_payment_amount_on_date(current_date)
-            map[payment.licence_plate] += amount
+            map[rental.licence_plate] += amount
 
         result_list = [TotalTakings(k, v) for k, v in map.items()]
         result_list.sort(key=lambda x: x.amount, reverse=True)
