@@ -165,10 +165,13 @@ class ParkingApp(ParkingControllerView):
     def _open_detail_parking_spaces(self) :
         self._clear_detail_frame()
 
+        title_label = tk.Label(self.detail_frame,text=TEXT_PARKING_SPACES)
+        title_label.grid(row=0,column=0,columnspan=3, padx=10,pady=5)  
+
         parking_spaces = self.controller.get_parking_spaces_overview()
         for p in parking_spaces :
             label = tk.Label(self.detail_frame,text=p.text, width=20, bg=p.background)
-            label.grid(row=p.row,column=p.column, padx=10,pady=10)  
+            label.grid(row=p.row+1,column=p.column, padx=10,pady=10)  
 
     def _open_detail_parked_cars(self) : 
         self._clear_detail_frame()
